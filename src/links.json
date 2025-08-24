@@ -1,0 +1,30 @@
+[
+  {
+    "Link": "https://portfolio.nexusgit.info",
+    "DisplayName": "Portfolio",
+    "Info": "Portfolio website displaying Jay's projects and achievements",
+    "Image": "https://picsum.photos/96/96",
+    "Enabled": true
+  },
+  {
+    "Link": "https://distrack.endpoint-system.uk",
+    "DisplayName": "DisTrack",
+    "Info": "Your Coding Tracker and Habit Builder",
+    "Image": "https://picsum.photos/96/96",
+    "Enabled": true
+  },
+  {
+    "Link": "https://augmented-perception.nexusgit.info/",
+    "DisplayName": "Augmented Perception",
+    "Info": "Explore the world of augmented reality and its applications.",
+    "Image": "https://picsum.photos/96/96",
+    "Enabled": true
+  },
+  {
+    "Link": "https://tos-and-privacy.nexusgit.info/",
+    "DisplayName": "TOS and Privacy Policies",
+    "Info": "Terms of Service and Privacy Policies for NexusGit projects.",
+    "Image": "https://picsum.photos/96/96",
+    "Enabled": false
+  }
+]
