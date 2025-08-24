@@ -2,7 +2,7 @@
   "name": "nexusgit-linktree",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://nexusgit.info",
+  "homepage": "https://www.nexusgit.info",
   "description": "Linktree-style site for NexusGit projects (placeholder content)",
   "scripts": {
     "start": "react-scripts start",
