@@ -3,28 +3,28 @@
     "Link": "https://portfolio.nexusgit.info",
     "DisplayName": "Portfolio",
     "Info": "Portfolio website displaying Jay's projects and achievements",
-    "Image": "./assets/icon.svg",
+    "Image": "https://raw.githubusercontent.com/JayNightmare/NexusGit-Information/01546d4e3a688a41368d0babbd85009f2e04e7dd/src/assets/icon.svg",
     "Enabled": true
   },
   {
     "Link": "https://distrack.nexusgit.info",
     "DisplayName": "DisTrack",
     "Info": "Your Coding Tracker and Habit Builder",
-    "Image": "./assets/images/New Distrack.jpg",
+    "Image": "https://github.com/JayNightmare/NexusGit-Information/blob/main/src/assets/images/New%20Distrack.jpg?raw=true",
     "Enabled": true
   },
   {
     "Link": "https://augmented-perception.nexusgit.info/",
     "DisplayName": "Augmented Perception",
     "Info": "Explore the world of augmented reality and its applications",
-    "Image": "./assets/images/ap.png",
+    "Image": "https://github.com/JayNightmare/NexusGit-Information/blob/main/src/assets/images/ap.png?raw=true",
     "Enabled": true
   },
   {
     "Link": "https://github.com/Nexus-Scripture",
     "DisplayName": "Nexus Scripture",
     "Info": "A collection of projects showcasing Discord Bots and related tools",
-    "Image": "./assets/images/nexus-scripture.jpg",
+    "Image": "https://github.com/JayNightmare/NexusGit-Information/blob/main/src/assets/images/nexus-scripture.jpg?raw=true",
     "Enabled": true
   },
   {

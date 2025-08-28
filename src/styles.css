@@ -44,7 +44,7 @@ body {
     background: var(--bg);
     color: var(--text);
     -webkit-font-smoothing: antialiased;
-    overflow: hidden;
+    overflow-x: hidden;
 
     text-overflow: ellipsis;
     transition: background 400ms ease, filter 400ms ease;
