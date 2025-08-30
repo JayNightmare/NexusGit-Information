@@ -7,6 +7,13 @@
     "Enabled": true
   },
   {
+    "Link": "https://mood-movies.nexusgit.info",
+    "DisplayName": "Mood Movies",
+    "Info": "Discover movies based on your mood.",
+    "Image": "https://github.com/JayNightmare/MoodMovie/blob/main/assets/moodmovie.png?raw=true",
+    "Enabled": true
+  },
+  {
     "Link": "https://distrack.nexusgit.info",
     "DisplayName": "DisTrack",
     "Info": "Your Coding Tracker and Habit Builder",
