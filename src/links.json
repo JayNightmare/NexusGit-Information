@@ -42,10 +42,10 @@
     "Enabled": true
   },
   {
-    "Link": "https://tos-and-privacy.nexusgit.info/",
+    "Link": "https://terms-and-privacy.nexusgit.info/",
     "DisplayName": "TOS and Privacy Policies",
     "Info": "Terms of Service and Privacy Policies for NexusGit projects",
     "Image": "https://picsum.photos/96/96",
-    "Enabled": false
+    "Enabled": true
   }
 ]
