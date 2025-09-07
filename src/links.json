@@ -35,6 +35,13 @@
     "Enabled": true
   },
   {
+    "Link": "https://radio.nexusgit.info",
+    "DisplayName": "Hollownest Radio",
+    "Info": "A radio station dedicated to the world of Hollow Knight",
+    "Image": "",
+    "Enabled": true
+  },
+  {
     "Link": "https://tos-and-privacy.nexusgit.info/",
     "DisplayName": "TOS and Privacy Policies",
     "Info": "Terms of Service and Privacy Policies for NexusGit projects",
