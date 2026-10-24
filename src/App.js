@@ -1,14 +1,16 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+	useEffect,
+	useLayoutEffect,
+	useMemo,
+	useRef,
+	useState,
+} from "react";
 import links from "./links.json";
+import nexusLogo from "./logo.json";
 
 const HOST = "nexusgit";
 const ORGANIZATIONS = ["KERI-Research", "KURE-x-Tech", "Mars-Command"];
 
-const LOGO_A = String.raw`█  █  ████  █  █  █  █   ███  ███  ███  ███`;
-const LOGO_B = String.raw`██ █  █     █  █  █  █  █     █     █ █  █`;
-const LOGO_C = String.raw`█ ██  ███   ████  █  █   ██   █ ██  █ █  █`;
-const LOGO_D = String.raw`█  █  █     █  █  █  █     █  █  █  █ █  █`;
-const LOGO_E = String.raw`█  █  ████  █  █   ██   ███   ███  ███  █`;
 const MASK = String.raw`
    _.-""""-._
  .'  _    _  '.
@@ -91,15 +93,48 @@ const markdownLines = (source) => {
 		});
 };
 
+const LOGO_COLUMNS = Math.max(...nexusLogo.map((line) => line.length));
+const STICK_THRESHOLD = 24;
+
+// Sizes the logo so its widest line always fits the terminal width.
+const fitLogo = (term) => {
+	if (!term) return;
+	const style = window.getComputedStyle(term);
+	const available =
+		term.clientWidth -
+		parseFloat(style.paddingLeft) -
+		parseFloat(style.paddingRight);
+	let ratio = 0.6;
+	try {
+		const context = document.createElement("canvas").getContext("2d");
+		if (context) {
+			context.font = `100px ${style.fontFamily}`;
+			const measured = context.measureText("M").width / 100;
+			if (measured > 0) ratio = measured;
+		}
+	} catch {
+		// Fall back to the typical monospace advance width.
+	}
+	const size = Math.min(
+		30,
+		Math.max(2, Math.floor((available / (LOGO_COLUMNS * ratio)) * 98) / 100),
+	);
+	term.style.setProperty("--logo-size", `${size}px`);
+};
+
 function App() {
 	const termRef = useRef(null);
 	const inputRef = useRef(null);
+	const menuRef = useRef(null);
+	const stickRef = useRef(true);
 	const queueRef = useRef(Promise.resolve());
 	const sleepSkipRef = useRef(false);
 	const historyRef = useRef([]);
 	const historyIndexRef = useRef(0);
 	const organizationReposRef = useRef(new Map());
 
+	const [wordWrap, setWordWrap] = useState(true);
+	const [menu, setMenu] = useState(null);
 	const [cwd, setCwd] = useState([]);
 	const [phase, setPhase] = useState("boot");
 	const [skipVisible, setSkipVisible] = useState(false);
@@ -1297,12 +1332,11 @@ function App() {
 	};
 
 	const introSeq = async () => {
-		const logo = [LOGO_A, LOGO_B, LOGO_C, LOGO_D, LOGO_E];
-		for (let index = 0; index < logo.length; index += 1) {
+		for (let index = 0; index < nexusLogo.length; index += 1) {
 			const accessibleLogo =
 				index === 0
-					? `<span role="img" aria-label="NexusGit">${esc(logo[index])}</span>`
-					: `<span aria-hidden="true">${esc(logo[index])}</span>`;
+					? `<span role="img" aria-label="NexusGit">${esc(nexusLogo[index])}</span>`
+					: `<span aria-hidden="true">${esc(nexusLogo[index])}</span>`;
 			appendLine(htmlLine(accessibleLogo, "logo"));
 			await sleep(110);
 		}
@@ -1436,10 +1470,138 @@ function App() {
 		startTerminal(false);
 	}, []);
 
+	const scrollToBottom = () => {
+		const term = termRef.current;
+		if (!term) return;
+		stickRef.current = true;
+		term.scrollTop = term.scrollHeight;
+	};
+
+	useLayoutEffect(() => {
+		if (stickRef.current) scrollToBottom();
+	}, [logs, phase, wordWrap]);
+
 	useEffect(() => {
-		if (!termRef.current) return;
-		termRef.current.scrollTop = termRef.current.scrollHeight;
-	}, [logs]);
+		const term = termRef.current;
+		if (!term) return undefined;
+		const refit = () => {
+			fitLogo(term);
+			if (stickRef.current) scrollToBottom();
+		};
+		refit();
+		window.addEventListener("resize", refit);
+		let observer;
+		if (typeof ResizeObserver !== "undefined") {
+			observer = new ResizeObserver(refit);
+			observer.observe(term);
+		}
+		document.fonts?.ready.then(refit);
+		return () => {
+			window.removeEventListener("resize", refit);
+			observer?.disconnect();
+		};
+	}, []);
+
+	const closeMenu = () => setMenu(null);
+
+	const openMenu = (event) => {
+		event.preventDefault();
+		setMenu({
+			x: event.clientX,
+			y: event.clientY,
+			selection: window.getSelection()?.toString() || "",
+		});
+	};
+
+	useLayoutEffect(() => {
+		const element = menuRef.current;
+		if (!menu || !element) return;
+		const margin = 8;
+		const left = Math.max(
+			margin,
+			Math.min(menu.x, window.innerWidth - element.offsetWidth - margin),
+		);
+		const top = Math.max(
+			margin,
+			Math.min(menu.y, window.innerHeight - element.offsetHeight - margin),
+		);
+		element.style.left = `${left}px`;
+		element.style.top = `${top}px`;
+		element.querySelector("button:not(:disabled)")?.focus();
+	}, [menu]);
+
+	useEffect(() => {
+		if (!menu) return undefined;
+		const onPointerDown = (event) => {
+			if (!menuRef.current?.contains(event.target)) setMenu(null);
+		};
+		const onKeyDown = (event) => {
+			if (event.key === "Escape") setMenu(null);
+		};
+		window.addEventListener("pointerdown", onPointerDown, true);
+		window.addEventListener("keydown", onKeyDown);
+		window.addEventListener("resize", closeMenu);
+		window.addEventListener("blur", closeMenu);
+		return () => {
+			window.removeEventListener("pointerdown", onPointerDown, true);
+			window.removeEventListener("keydown", onKeyDown);
+			window.removeEventListener("resize", closeMenu);
+			window.removeEventListener("blur", closeMenu);
+		};
+	}, [menu]);
+
+	const onMenuKeyDown = (event) => {
+		if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
+		event.preventDefault();
+		const items = [
+			...menuRef.current.querySelectorAll("button:not(:disabled)"),
+		];
+		const current = items.indexOf(document.activeElement);
+		const step = event.key === "ArrowDown" ? 1 : -1;
+		items[(current + step + items.length) % items.length]?.focus();
+	};
+
+	const menuAction = async (action) => {
+		const selection = menu?.selection || "";
+		setMenu(null);
+		if (action === "wrap") {
+			setWordWrap((value) => !value);
+		} else if (action === "bottom") {
+			scrollToBottom();
+		} else if (action === "save") {
+			const text = termRef.current?.querySelector("#out")?.innerText || "";
+			const url = URL.createObjectURL(
+				new Blob([text], { type: "text/plain;charset=utf-8" }),
+			);
+			const anchor = document.createElement("a");
+			anchor.href = url;
+			anchor.download = "nexusgit-terminal.txt";
+			document.body.appendChild(anchor);
+			anchor.click();
+			anchor.remove();
+			URL.revokeObjectURL(url);
+		} else if (action === "copy" && selection) {
+			try {
+				await navigator.clipboard.writeText(selection);
+			} catch {
+				// Clipboard access can be denied by the browser.
+			}
+		} else if (action === "paste") {
+			try {
+				const text = (await navigator.clipboard.readText()).replace(
+					/\s*\r?\n\s*/g,
+					" ",
+				);
+				const field = inputRef.current;
+				const start = field?.selectionStart ?? input.length;
+				const end = field?.selectionEnd ?? input.length;
+				setInput(input.slice(0, start) + text + input.slice(end));
+			} catch {
+				// Clipboard access can be denied by the browser.
+			}
+			inputRef.current?.focus({ preventScroll: true });
+		}
+	};
 
 	useEffect(() => {
 		const onSkip = () => {
@@ -1474,10 +1636,17 @@ function App() {
 
 			<main
 				id="term"
-				className="term"
+				className={`term${wordWrap ? "" : " nowrap"}`}
 				ref={termRef}
 				role="log"
 				aria-live="polite"
+				onScroll={(event) => {
+					const term = event.currentTarget;
+					stickRef.current =
+						term.scrollHeight - term.scrollTop - term.clientHeight <
+						STICK_THRESHOLD;
+				}}
+				onContextMenu={openMenu}
 				onClick={(event) => {
 					const button =
 						event.target.closest(
@@ -1612,6 +1781,66 @@ function App() {
 					/>
 				</div>
 			</main>
+			{menu && (
+				<div
+					ref={menuRef}
+					className="ctx"
+					role="menu"
+					style={{ left: menu.x, top: menu.y }}
+					onMouseDown={(event) => event.preventDefault()}
+					onContextMenu={(event) => event.preventDefault()}
+					onKeyDown={onMenuKeyDown}
+				>
+					<button
+						type="button"
+						role="menuitemcheckbox"
+						aria-checked={wordWrap}
+						onClick={() => menuAction("wrap")}
+					>
+						<span className="ico">{wordWrap ? "✓" : ""}</span>
+						<span className="lbl">Word wrap</span>
+					</button>
+					<hr />
+					<button
+						type="button"
+						role="menuitem"
+						onClick={() => menuAction("save")}
+					>
+						<span className="ico">⇩</span>
+						<span className="lbl">Save to file</span>
+					</button>
+					<hr />
+					<button
+						type="button"
+						role="menuitem"
+						disabled={!menu.selection}
+						onClick={() => menuAction("copy")}
+					>
+						<span className="ico">⧉</span>
+						<span className="lbl">Copy</span>
+						<span className="key">Ctrl+C</span>
+					</button>
+					<button
+						type="button"
+						role="menuitem"
+						disabled={phase !== "live"}
+						onClick={() => menuAction("paste")}
+					>
+						<span className="ico">⎘</span>
+						<span className="lbl">Paste</span>
+						<span className="key">Ctrl+V</span>
+					</button>
+					<hr />
+					<button
+						type="button"
+						role="menuitem"
+						onClick={() => menuAction("bottom")}
+					>
+						<span className="ico">⤓</span>
+						<span className="lbl">Scroll to bottom</span>
+					</button>
+				</div>
+			)}
 			<p id="skip" className="skip" hidden={!skipVisible}>
 				press any key to skip boot
 			</p>
