@@ -1,73 +1,85 @@
-# NexusGit Linktree (React)
+# NexusGit Terminal (React)
 
-Dark-mode, mobile-friendly Linktree-style landing page listing NexusGit projects. All link data is loaded from a single JSON file for easy editing.
+This project now renders NexusGit as a full-screen cyber terminal experience (Arch-style TTY) instead of a card-based link tree. The title and ASCII logo retain NexusGit branding while the boot, login, typing, glitch, cursor, and CRT scanline effects follow the supplied original HTML reference.
 
-## Editing Links
-Update `src/links.json` with real project data. Schema:
+## What changed
 
-```
+- Original-style Arch boot log, memory counter, service status lines, decrypting progress bar, NexusGit ASCII logo, typed login, and skippable intro.
+- Session-aware startup:
+  - First visit in a tab: full boot flow.
+  - Later reloads in the same tab: jumps straight to live prompt and runs `ls projects`.
+- Virtual filesystem + shell commands (`ls`, `cd`, `cat`, `open`, `get`, `links`, `tree`, `neofetch`, etc.).
+- Project pages are generated from `src/links.json` at startup.
+- GitHub organization repositories are fetched live from the public GitHub API.
+- Offline projects (`Enabled: false`) are marked in `ls` and blocked by `open`.
+- Downloads path support (`downloads/hoodieweather/0.5/HoodieWeather.exe`) and `get` command.
+- Optional rain effect via terminal command (`rain on` / `rain off`).
+
+## Data source (`src/links.json`)
+
+`src/links.json` is still the single source of truth for project links:
+
+```json
 [
-  {"Link": "https://url", "DisplayName": "Readable Name", "Info": "Short description", "Image": "https://image-or-icon.png"}
+  {
+    "Link": "https://example.com",
+    "DisplayName": "Example Project",
+    "Info": "Short project summary",
+    "Image": "https://example.com/icon.png",
+    "Enabled": true
+  }
 ]
 ```
 
-Fields:
-- Link (string, required) – destination URL.
-- DisplayName (string, required) – shown as card title.
-- Info (string, optional) – supporting text.
-- Image (string, optional) – square image/logo. If missing, first letter of DisplayName is shown.
+`Image` remains optional in the data model but is not currently used by the terminal renderer.
 
-## Local Development
-```
+## Command quick reference
+
+- `help` — command overview
+- `ls [-a] [-l] [path]` — list directory
+- `cd [path]` — change directory
+- `cat <file|path>` — print page content
+- `open <file|path>` — open external URL in a new tab
+- `get <file|path>` — print download anchor for downloadable files
+- `links` — flat list of all external links (accessibility + speed)
+- `orgs` — list the GitHub organizations
+- `repos <organization>` — fetch and list an organization's public repositories
+- `ls orgs/<organization>` — browse an organization's repository directory
+- `cat orgs/<organization>/<repository>` — show repository description and language
+- `open orgs/<organization>/<repository>` — open the repository on GitHub
+- `tree` — display tree view
+- `theme <cyan|magenta|amber|green>` — accent color switch
+- `rain [on|off]` — toggle rain overlay
+- `whoami`, `hostname`, `uname [-a]`, `date`, `echo` — terminal information and output
+- `sudo`, `pacman`, `rm` — simulated system responses
+- `neofetch` / `neo` — NexusGit system info snapshot
+- `clear` / `cls` — clear output
+- `reboot` / `exit` — replay startup
+
+The configured organizations are `KERI-Research`, `KURE-x-Tech`, and `Mars-Command`.
+Repository results are fetched on first access and cached for the current page session.
+The GitHub API is unauthenticated, so public API rate limits apply; errors are reported
+in the terminal rather than silently falling back to incomplete data.
+
+## Local development
+
+```bash
 npm install
 npm start
 ```
-Page runs at http://localhost:3000
+
+Runs at <http://localhost:3000>.
 
 ## Build
-```
+
+```bash
 npm run build
 ```
 
-## Deploy to GitHub Pages
-1. Ensure repository has GitHub Pages enabled (gh-pages branch) and custom domain set to `nexusgit.info` in repo settings (Pages -> Custom domain). This will also create / update the DNS records required.
-2. Confirm the `public/CNAME` file contains the domain (already added).
-3. Deploy:
-```
+## Deploy
+
+```bash
 npm run deploy
 ```
-This publishes the `build/` directory to the `gh-pages` branch via the `gh-pages` package.
 
-If you rename the repository or use a different domain, adjust the `homepage` value in `package.json` accordingly (for a custom domain keep it as the full https:// URL of that domain).
-
-## Downloads Route (versioned executables)
-You can host downloadable files directly from the site via a simple versioned path under the `public/` folder. Any files placed inside `public` are copied to the root of the deployed site.
-
-- Local path structure: `public/application/downloads/<version>/application.exe`
-- Deployed URL structure: `https://nexusgit.info/application/downloads/<version>/application.exe`
-
-Example: adding the file at `public/application/downloads/1.2.3/application.exe` will be available at:
-
-- `https://nexusgit.info/application/downloads/1.2.3/application.exe`
-
-Notes and recommendations:
-- File size limits: GitHub Pages is meant for static sites. While it can serve binaries, large files may be slow or hit limits. Prefer keeping binaries small. For larger installers, use GitHub Releases and link to them from this site.
-- MIME type: GitHub Pages (via GitHub’s CDN) will serve `.exe` with a generic/binary content-type; browsers will download rather than display. That’s fine for installers.
-- SEO/Indexing: version folders are static; update links or your UI to point to the latest version if desired.
-- Security: only commit files you intend to publish publicly. Avoid including secrets in the repo.
-
-To publish a new version:
-1. Add the file at `public/application/downloads/<new-version>/application.exe`.
-2. Commit and deploy with `npm run deploy`.
-3. Share the corresponding URL.
-
-## Accessibility / Best Practices
-- Semantic headings, focus outlines, color contrast tuned for dark background.
-- Reduced motion respected (`prefers-reduced-motion`).
-- External links open in new tab with `rel="noopener noreferrer"`.
-
-## Custom Styling
-Adjust colors and spacing inside `src/styles.css`. Cards are pure CSS and minimal.
-
-## License
-Add your chosen license file if needed.
+Build output is published from `build/` to GitHub Pages via `gh-pages`.
