@@ -37,7 +37,11 @@ body {
     font-family: var(--font-mono);
     font-size: 15px;
     line-height: 1.45;
-    overflow: hidden;
+    /* overflow: hidden; */
+    scrollbar-width: thin;
+    scrollbar-color: #1b2430 transparent;
+    overscroll-behavior-x: smooth;
+    overscroll-behavior-y: smooth;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -74,11 +78,9 @@ a {
     z-index: 20;
     background:
         radial-gradient(ellipse at center, transparent 60%, rgba(0, 0, 0, 0.46)),
-        repeating-linear-gradient(
-            to bottom,
+        repeating-linear-gradient(to bottom,
             rgba(0, 0, 0, 0.14) 0 1px,
-            rgba(0, 0, 0, 0) 1px 3px
-        );
+            rgba(0, 0, 0, 0) 1px 3px);
 }
 
 .out,
@@ -97,7 +99,7 @@ a {
     min-height: 1.45em;
 }
 
-.ln + .ln {
+.ln+.ln {
     margin-top: 2px;
 }
 
@@ -115,6 +117,7 @@ a {
 }
 
 @keyframes glitch {
+
     0%,
     92%,
     100% {
@@ -311,7 +314,7 @@ input:focus {
     gap: 3px 20px;
 }
 
-.tbl > span {
+.tbl>span {
     min-width: 0;
 }
 
@@ -405,6 +408,7 @@ input:focus {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
     *,
     *::before,
     *::after {

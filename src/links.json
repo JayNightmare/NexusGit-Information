@@ -1,51 +1,51 @@
 [
-  {
-    "Link": "https://portfolio.nexusgit.info",
-    "DisplayName": "Portfolio",
-    "Info": "Portfolio website displaying Jay's projects and achievements",
-    "Image": "https://raw.githubusercontent.com/JayNightmare/NexusGit-Information/01546d4e3a688a41368d0babbd85009f2e04e7dd/src/assets/icon.svg",
-    "Enabled": true
-  },
-  {
-    "Link": "https://mood-movies.nexusgit.info",
-    "DisplayName": "Mood Movies",
-    "Info": "Discover movies based on your mood.",
-    "Image": "https://github.com/JayNightmare/MoodMovie/blob/main/assets/moodmovie.png?raw=true",
-    "Enabled": true
-  },
-  {
-    "Link": "https://distrack.nexusgit.info",
-    "DisplayName": "DisTrack",
-    "Info": "Your Coding Tracker and Habit Builder",
-    "Image": "https://github.com/JayNightmare/NexusGit-Information/blob/main/src/assets/images/New%20Distrack.jpg?raw=true",
-    "Enabled": true
-  },
-  {
-    "Link": "https://augmented-perception.nexusgit.info/",
-    "DisplayName": "Augmented Perception",
-    "Info": "Explore the world of augmented reality and its applications",
-    "Image": "https://github.com/JayNightmare/NexusGit-Information/blob/main/src/assets/images/ap.png?raw=true",
-    "Enabled": true
-  },
-  {
-    "Link": "https://github.com/Nexus-Scripture",
-    "DisplayName": "Nexus Scripture",
-    "Info": "A collection of projects showcasing Discord Bots and related tools",
-    "Image": "https://github.com/JayNightmare/NexusGit-Information/blob/main/src/assets/images/nexus-scripture.jpg?raw=true",
-    "Enabled": true
-  },
-  {
-    "Link": "https://radio.nexusgit.info",
-    "DisplayName": "Hollownest Radio",
-    "Info": "A radio station dedicated to the world of Hollow Knight",
-    "Image": "https://github.com/JayNightmare/NexusGit-Information/blob/main/src/assets/images/hollownest.png?raw=true",
-    "Enabled": true
-  },
-  {
-    "Link": "https://terms-and-privacy.nexusgit.info/",
-    "DisplayName": "TOS and Privacy Policies",
-    "Info": "Terms of Service and Privacy Policies for NexusGit projects",
-    "Image": "https://picsum.photos/96/96",
-    "Enabled": true
-  }
+	{
+		"Link": "https://portfolio.nexusgit.info",
+		"DisplayName": "Portfolio",
+		"Info": "Jay Bell's full-stack developer portfolio featuring projects, technical skills, open-source contributions, and software engineering blog updates. The portfolio highlights work with React, TypeScript, and Node.js.",
+		"Image": "https://raw.githubusercontent.com/JayNightmare/NexusGit-Information/01546d4e3a688a41368d0babbd85009f2e04e7dd/src/assets/icon.svg",
+		"Enabled": true
+	},
+	{
+		"Link": "https://mars.nexusgit.info/",
+		"DisplayName": "Mars Command",
+		"Info": "Mars Command is a Windows and Linux desktop companion for the Mars modded Minecraft server. It monitors server status, verifies the signed pack manifest, syncs an isolated game directory, and registers the installation in Minecraft Launcher.",
+		"Image": "https://avatars.githubusercontent.com/u/339303160?s=200&v=4",
+		"Enabled": true
+	},
+	{
+		"Link": "https://github.com/KERI-Research",
+		"DisplayName": "KERI Research",
+		"Info": "The KERI Research GitHub organization, bringing together projects that showcase research and development in the field of KERI (Key Exchange and Registration Infrastructure).",
+		"Image": "https://avatars.githubusercontent.com/u/307146835?s=200&v=4",
+		"Enabled": true
+	},
+	{
+		"Link": "https://kure-x-tech.github.io/Project-Asteria/",
+		"DisplayName": "Project Asteria",
+		"Info": "Implementation of the LunaNet Augmented Forward Signal (AFS) spreading code generators and forward error correction (FEC) encoders, built to the LSIS-AFS Volume A specification.",
+		"Image": "https://avatars.githubusercontent.com/u/274032883?s=60&v=4",
+		"Enabled": true
+	},
+	{
+		"Link": "https://film.nexusgit.info",
+		"DisplayName": "Film Reel",
+		"Info": "A collection of film and video projects, including short films, animations, and experimental works.",
+		"Image": "https://github.com/JayNightmare/MoodMovie/blob/main/assets/moodmovie.png?raw=true",
+		"Enabled": true
+	},
+	{
+		"Link": "https://radio.nexusgit.info",
+		"DisplayName": "Hallownest Radio",
+		"Info": "A radio station dedicated to the world and music of Hollow Knight.",
+		"Image": "https://github.com/JayNightmare/NexusGit-Information/blob/main/src/assets/images/hollownest.png?raw=true",
+		"Enabled": true
+	},
+	{
+		"Link": "https://terms-and-privacy.nexusgit.info/",
+		"DisplayName": "TOS and Privacy Policies",
+		"Info": "The official site for NexusGit project terms of service and privacy policies.",
+		"Image": "https://raw.githubusercontent.com/JayNightmare/NexusGit-Information/01546d4e3a688a41368d0babbd85009f2e04e7dd/src/assets/icon.svg",
+		"Enabled": true
+	}
 ]

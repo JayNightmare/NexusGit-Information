@@ -4,13 +4,6 @@ import links from "./links.json";
 const HOST = "nexusgit";
 const ORGANIZATIONS = ["KERI-Research", "KURE-x-Tech", "Mars-Command"];
 
-const LOREM1 =
-	"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla in velit fermentum, volutpat lectus nec, pharetra justo.";
-const LOREM2 =
-	"Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.";
-const LOREM3 =
-	"Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
-
 const LOGO_A = String.raw`█  █  ████  █  █  █  █   ███  ███  ███  ███`;
 const LOGO_B = String.raw`██ █  █     █  █  █  █  █     █     █ █  █`;
 const LOGO_C = String.raw`█ ██  ███   ████  █  █   ██   █ ██  █ █  █`;
@@ -128,10 +121,13 @@ function App() {
 		const projectFiles = {};
 		const organizationDirectories = {};
 		ORGANIZATIONS.forEach((organization) => {
-			organizationDirectories[organization] = D({}, {
-				kind: "organization",
-				name: organization,
-			});
+			organizationDirectories[organization] = D(
+				{},
+				{
+					kind: "organization",
+					name: organization,
+				},
+			);
 		});
 		const linkList = [];
 		let enabledCount = 0;
@@ -140,6 +136,9 @@ function App() {
 			const name = item.DisplayName || "Untitled Project";
 			const slug = `${slugify(name)}.md`;
 			const href = item.Link || "#";
+			const info =
+				item.Info ||
+				"No description has been published for this project.";
 			const enabled = item.Enabled !== false;
 			const hostname = parseHost(href);
 			if (enabled) enabledCount += 1;
@@ -149,7 +148,9 @@ function App() {
 				enabled,
 				slug,
 				hostname,
-				info: item.Info || "No description provided.",
+				info:
+					item.Info ||
+					"No description has been published for this project.",
 			});
 
 			projectFiles[slug] = F({
@@ -161,11 +162,12 @@ function App() {
 				md: [
 					`# ${name}`,
 					"",
-					item.Info || LOREM1,
+					item.Info ||
+						"No description has been published for this project.",
 					"",
-					`## endpoint`,
-					`- host: ${hostname}`,
-					`- status: ${enabled ? "online" : "offline"}`,
+					`## project details`,
+					`- website: ${hostname}`,
+					`- listing: ${enabled ? "enabled" : "disabled"}`,
 					"",
 					`Use [[open projects/${slugify(name)}.md|open in new tab]] or [direct link](${href}).`,
 				].join("\n"),
@@ -175,17 +177,19 @@ function App() {
 		const readme = [
 			"# NexusGit",
 			"",
-			"Welcome to NexusGit. Navigate projects, organizations, and downloads like files.",
+			"NexusGit is Jay Bell's project hub, bringing together software projects, web apps, research work, and community initiatives.",
+			"The portfolio highlights full-stack work with React, TypeScript, and Node.js; project and organization pages link to their live sites and public repositories.",
 			"",
-			"## quick start",
-			"- [[ls projects|list projects]]",
-			"- [[orgs|browse organizations and repositories]]",
-			"- [[cat about|read about]]",
-			"- [[links|show all links]]",
-			"- [[help|show all commands]]",
+			"## start here",
+			"[[ls projects|browse the projects]]",
+			"[[orgs|browse GitHub organizations and repositories]]",
+			"[[cat about|read about NexusGit]]",
+			"[[links|open the project directory]]",
+			"[[help|see terminal commands]]",
 			"",
-			"## note",
-			`${LOREM2}`,
+			"## useful links",
+			"- [Jays portfolio](https://portfolio.nexusgit.info)",
+			"- [GitHub profile](https://github.com/JayNightmare)",
 		].join("\n");
 
 		return {
@@ -198,18 +202,30 @@ function App() {
 				"about.md": F({
 					kind: "page",
 					title: "About",
-					md: `# About NexusGit\n\n${LOREM1}\n\n${LOREM3}`,
+					md: [
+						"# About NexusGit",
+						"",
+						"NexusGit is Jay Bell's online project hub. It connects a full-stack developer portfolio with live applications, research projects, community work, and public GitHub organizations.",
+						"",
+						"The portfolio describes Jay's work with React, TypeScript, and Node.js and includes projects, technical skills, open-source contributions, and software engineering blog updates.",
+						"",
+						"## explore",
+						"- [[ls projects|projects and applications]]",
+						"- [[orgs|GitHub organizations and repositories]]",
+						"- [Jay Bell's portfolio](https://portfolio.nexusgit.info)",
+						"- [JayNightmare on GitHub](https://github.com/JayNightmare)",
+					].join("\n"),
 				}),
 				"contact.md": F({
 					kind: "page",
 					title: "Contact",
-					md: "# Contact\n\nReach out at [GitHub](https://github.com/JayNightmare).",
+					md: "# Contact\n\nFor project information and public code, visit [Jay Bell's portfolio](https://portfolio.nexusgit.info) or [JayNightmare on GitHub](https://github.com/JayNightmare).",
 				}),
 				legal: D({
 					"terms-and-privacy.md": F({
 						kind: "page",
 						title: "Terms and Privacy",
-						md: "# Terms and Privacy\n\nPlaceholder legal content. Replace this with your production text.",
+						md: "# Terms and Privacy\n\nNexusGit's terms of service and privacy documents are maintained on the [Terms and Privacy site](https://terms-and-privacy.nexusgit.info/). Open that site for the current legal documents.",
 					}),
 				}),
 				projects: D(projectFiles),
@@ -221,7 +237,7 @@ function App() {
 								kind: "download",
 								title: "HoodieWeather.exe",
 								href: "/application/downloads/HoodieWeather/0.5/HoodieWeather.exe",
-								md: "# HoodieWeather 0.5\n\nDownload the current release binary below.",
+								md: "# HoodieWeather 0.5\n\nThe Windows executable for HoodieWeather version 0.5 is hosted in the NexusGit downloads directory. Use the link below to download the published file.",
 							}),
 						}),
 					}),
@@ -340,7 +356,10 @@ function App() {
 			["get <file>", "download a file"],
 			["tree", "show the site map"],
 			["links", "list every project URL"],
-			["orgs / repos <org>", "browse organizations and repositories"],
+			[
+				"orgs / repos <org>",
+				"browse organizations and repositories",
+			],
 			["pwd", "print working directory"],
 			["neofetch", "show NexusGit system info"],
 			["theme [name]", "switch accent color"],
@@ -353,10 +372,18 @@ function App() {
 			["reboot / exit", "restart the boot sequence"],
 		];
 		const table = commands
-			.map(([name, description]) => `<span><button class="lnk" data-cmd="${esc(name.split(" ")[0])}">${esc(name)}</button></span><span class="dim">${esc(description)}</span>`)
+			.map(
+				([name, description]) =>
+					`<span><button class="lnk" data-cmd="${esc(name.split(" ")[0])}">${esc(name)}</button></span><span class="dim">${esc(description)}</span>`,
+			)
 			.join("");
 		appendLine(htmlLine(`<div class="tbl">${table}</div>`, "pg"));
-		appendLine(htmlLine("Tab completes names, Up/Down walks history. Click a highlighted command or link to run it.", "dim"));
+		appendLine(
+			htmlLine(
+				"Tab completes names, Up/Down walks history. Click a highlighted command or link to run it.",
+				"dim",
+			),
+		);
 	};
 
 	const loadOrganizationRepos = async (organization) => {
@@ -420,7 +447,7 @@ function App() {
 
 				const description = (
 					repo.description ||
-					"No description provided."
+					"No description has been published by this repository."
 				)
 					.replace(/\s+/g, " ")
 					.trim();
@@ -706,8 +733,12 @@ function App() {
 		}
 
 		if (command === "ls" || command === "dir") {
-			const flagBlob = args.filter((arg) => arg.startsWith("-")).join("");
-			const targetArg = args.find((arg) => !arg.startsWith("-"));
+			const flagBlob = args
+				.filter((arg) => arg.startsWith("-"))
+				.join("");
+			const targetArg = args.find(
+				(arg) => !arg.startsWith("-"),
+			);
 			await listDir(targetArg, {
 				all: flagBlob.includes("a"),
 				long: flagBlob.includes("l"),
@@ -813,18 +844,30 @@ function App() {
 		if (command === "tree") {
 			const walk = (node, prefix = "", parts = []) => {
 				if (node.t !== "d") return;
-				const names = Object.keys(node.c).filter((name) => !name.startsWith(".")).sort();
+				const names = Object.keys(node.c)
+					.filter((name) => !name.startsWith("."))
+					.sort();
 				names.forEach((name, index) => {
 					const child = node.c[name];
 					const last = index === names.length - 1;
 					const marker = last ? "└──" : "├──";
 					const childParts = [...parts, name];
-					const renderedName = child.t === "d"
-						? `<button class="lnk" data-cmd="cd ${esc(childParts.join("/"))}">${esc(name)}/</button>`
-						: `<button class="lnk f" data-cmd="cat ${esc(childParts.join("/"))}">${esc(name)}</button>`;
-					appendLine(htmlLine(`${esc(prefix + marker)} ${renderedName}`, "pg"));
+					const renderedName =
+						child.t === "d"
+							? `<button class="lnk" data-cmd="cd ${esc(childParts.join("/"))}">${esc(name)}/</button>`
+							: `<button class="lnk f" data-cmd="cat ${esc(childParts.join("/"))}">${esc(name)}</button>`;
+					appendLine(
+						htmlLine(
+							`${esc(prefix + marker)} ${renderedName}`,
+							"pg",
+						),
+					);
 					if (child.t === "d") {
-						walk(child, `${prefix}${last ? "    " : "│   "}`, childParts);
+						walk(
+							child,
+							`${prefix}${last ? "    " : "│   "}`,
+							childParts,
+						);
 					}
 				});
 			};
@@ -939,18 +982,34 @@ function App() {
 		}
 
 		if (command === "neofetch" || command === "neo") {
-			const uptimeSeconds = Math.floor((Date.now() - performance.timeOrigin) / 1000);
+			const uptimeSeconds = Math.floor(
+				(Date.now() - performance.timeOrigin) / 1000,
+			);
 			const info = [
 				["OS", "Arch Linux x86_64"],
 				["Kernel", "6.17.2-arch1-1"],
 				["Uptime", `${uptimeSeconds}s`],
 				["Shell", "bash 5.3"],
-				["Terminal", `tty1 ${Math.max(20, Math.floor(window.innerWidth / 9))}x${Math.max(10, Math.floor(window.innerHeight / 21))}`],
+				[
+					"Terminal",
+					`tty1 ${Math.max(20, Math.floor(window.innerWidth / 9))}x${Math.max(10, Math.floor(window.innerHeight / 21))}`,
+				],
 				["Domain", rootNode.stats.domain],
-				["Projects", `${rootNode.stats.enabled}/${rootNode.stats.total} online`],
-				["Organizations", String(rootNode.organizations.length)],
+				[
+					"Projects",
+					`${rootNode.stats.enabled}/${rootNode.stats.total} online`,
+				],
+				[
+					"Organizations",
+					String(rootNode.organizations.length),
+				],
 			];
-			const rows = info.map(([label, value]) => `<dt>${esc(label)}</dt><dd>${esc(value)}</dd>`).join("");
+			const rows = info
+				.map(
+					([label, value]) =>
+						`<dt>${esc(label)}</dt><dd>${esc(value)}</dd>`,
+				)
+				.join("");
 			appendLine(
 				htmlLine(
 					`<div class="fetch"><pre>${esc(MASK.join(String.fromCharCode(10)))}</pre><dl><dt style="grid-column:1/-1">guest<span class="dim">@${HOST}</span></dt>${rows}</dl></div>`,
@@ -961,7 +1020,14 @@ function App() {
 		}
 
 		if (command === "reboot" || command === "exit") {
-			appendLine(htmlLine(command === "exit" ? "logout" : "Rebooting...", "dim"));
+			appendLine(
+				htmlLine(
+					command === "exit"
+						? "logout"
+						: "Rebooting...",
+					"dim",
+				),
+			);
 			await sleep(500);
 			await startTerminal(true);
 			return;
@@ -973,7 +1039,14 @@ function App() {
 		}
 
 		if (command === "uname") {
-			appendLine(htmlLine(args[0] === "-a" ? `Linux ${HOST} 6.17.2-arch1-1 #1 SMP PREEMPT_DYNAMIC x86_64 GNU/Linux` : "Linux", "pg"));
+			appendLine(
+				htmlLine(
+					args[0] === "-a"
+						? `Linux ${HOST} 6.17.2-arch1-1 #1 SMP PREEMPT_DYNAMIC x86_64 GNU/Linux`
+						: "Linux",
+					"pg",
+				),
+			);
 			return;
 		}
 
@@ -988,17 +1061,34 @@ function App() {
 		}
 
 		if (command === "sudo") {
-			appendLine(htmlLine("guest is not in the sudoers file. This incident will be reported.", "err"));
+			appendLine(
+				htmlLine(
+					"guest is not in the sudoers file. This incident will be reported.",
+					"err",
+				),
+			);
 			return;
 		}
 
 		if (command === "pacman") {
-			appendLine(htmlLine(args.length ? "error: you cannot perform this operation unless you are root." : "usage: pacman &lt;operation&gt; [...]", "err"));
+			appendLine(
+				htmlLine(
+					args.length
+						? "error: you cannot perform this operation unless you are root."
+						: "usage: pacman &lt;operation&gt; [...]",
+					"err",
+				),
+			);
 			return;
 		}
 
 		if (command === "rm") {
-			appendLine(htmlLine("rm: cannot remove: Permission denied. This filesystem is read-only.", "err"));
+			appendLine(
+				htmlLine(
+					"rm: cannot remove: Permission denied. This filesystem is read-only.",
+					"err",
+				),
+			);
 			return;
 		}
 
@@ -1031,7 +1121,9 @@ function App() {
 			setInput("");
 			await runCommand(value);
 			if (!window.matchMedia("(pointer: coarse)").matches) {
-				inputRef.current?.focus({ preventScroll: true });
+				inputRef.current?.focus({
+					preventScroll: true,
+				});
 			}
 		});
 	};
@@ -1044,35 +1136,73 @@ function App() {
 
 		if (isCommandToken) {
 			const commands = [
-				"help", "ls", "dir", "cd", "cat", "open", "get", "links",
-				"orgs", "repos", "tree", "pwd", "history", "clear", "cls",
-				"neofetch", "neo", "theme", "rain", "whoami", "hostname",
-				"uname", "date", "echo", "sudo", "pacman", "rm", "reboot", "exit",
+				"help",
+				"ls",
+				"dir",
+				"cd",
+				"cat",
+				"open",
+				"get",
+				"links",
+				"orgs",
+				"repos",
+				"tree",
+				"pwd",
+				"history",
+				"clear",
+				"cls",
+				"neofetch",
+				"neo",
+				"theme",
+				"rain",
+				"whoami",
+				"hostname",
+				"uname",
+				"date",
+				"echo",
+				"sudo",
+				"pacman",
+				"rm",
+				"reboot",
+				"exit",
 			];
-			const matches = commands.filter((cmd) => cmd.startsWith(parts[0].toLowerCase()));
+			const matches = commands.filter((cmd) =>
+				cmd.startsWith(parts[0].toLowerCase()),
+			);
 			if (matches.length === 1) {
 				setInput(`${matches[0]} `);
 				return;
 			}
-			if (matches.length > 1) appendLine(htmlLine(matches.join("  "), "dim"));
+			if (matches.length > 1)
+				appendLine(htmlLine(matches.join("  "), "dim"));
 			return;
 		}
 
 		const token = raw.endsWith(" ") ? "" : parts[parts.length - 1];
 		const baseParts = resolvePath(token || ".");
-		const parentParts = token && token.includes("/") ? baseParts.slice(0, -1) : [...cwd];
-		const prefix = token && token.includes("/") ? token.split("/").slice(-1)[0] : token || "";
+		const parentParts =
+			token && token.includes("/")
+				? baseParts.slice(0, -1)
+				: [...cwd];
+		const prefix =
+			token && token.includes("/")
+				? token.split("/").slice(-1)[0]
+				: token || "";
 		const parentNode = nodeAt(parentParts);
 		if (!parentNode || parentNode.t !== "d") return;
 
-		const matches = Object.keys(parentNode.c).filter((name) => name.startsWith(prefix));
+		const matches = Object.keys(parentNode.c).filter((name) =>
+			name.startsWith(prefix),
+		);
 		if (!matches.length) return;
 		if (matches.length === 1) {
 			const match = matches[0];
 			const isDir = parentNode.c[match].t === "d";
 			const rebuilt = [
 				...parts.slice(0, -1),
-				(token || "").replace(/[^/]*$/, "") + match + (isDir ? "" : " "),
+				(token || "").replace(/[^/]*$/, "") +
+					match +
+					(isDir ? "" : " "),
 			].join(" ");
 			setInput(rebuilt);
 			return;
@@ -1084,7 +1214,12 @@ function App() {
 		setPhase("boot");
 		setSkipVisible(true);
 		clearLogs();
-		appendLine(htmlLine("Arch Linux 6.17.2-arch1-1 (nexusgit) booting...", "dim"));
+		appendLine(
+			htmlLine(
+				"Arch Linux 6.17.2-arch1-1 (nexusgit) booting...",
+				"dim",
+			),
+		);
 		await sleep(300);
 
 		const early = [
@@ -1103,27 +1238,45 @@ function App() {
 		for (let memory = 0; memory <= 65536; memory += 8192) {
 			setLogs((prev) => [
 				...prev.slice(0, -1),
-				htmlLine(`memtest: ${String(memory).padStart(5)}K / 65536K`, "pg"),
+				htmlLine(
+					`memtest: ${String(memory).padStart(5)}K / 65536K`,
+					"pg",
+				),
 			]);
 			await sleep(60);
 		}
 		setLogs((prev) => [
 			...prev.slice(0, -1),
-			htmlLine('memtest: 65536K / 65536K <span class="ok">[  OK  ]</span>', "pg"),
+			htmlLine(
+				'memtest: 65536K / 65536K <span class="ok">[  OK  ]</span>',
+				"pg",
+			),
 		]);
 
 		const services = [
 			["ok", "Mounted /dev/neural0."],
-			["ok", "Started Load Kernel Modules (chrome.ko synapse.ko ice.ko)."],
+			[
+				"ok",
+				"Started Load Kernel Modules (chrome.ko synapse.ko ice.ko).",
+			],
 			["ok", "Started ICE Breaker Daemon."],
-			["warn", "corp-surveillance.service detected, ignoring."],
-			["ok", "Started MAC Address Spoofing (4C:6F:72:65:6D:00)."],
+			[
+				"warn",
+				"corp-surveillance.service detected, ignoring.",
+			],
+			[
+				"ok",
+				"Started MAC Address Spoofing (4C:6F:72:65:6D:00).",
+			],
 			["ok", "Reached target Network is Online."],
 			["ok", "Started Uplink to nexusgit.info."],
 			["ok", "Reached target Multi-User System."],
 		];
 		for (const [kind, message] of services) {
-			const tag = kind === "ok" ? '<span class="ok">[  OK  ]</span>' : '<span class="warn">[ WARN ]</span>';
+			const tag =
+				kind === "ok"
+					? '<span class="ok">[  OK  ]</span>'
+					: '<span class="warn">[ WARN ]</span>';
 			appendLine(htmlLine(`${tag} ${esc(message)}`, "pg"));
 			await sleep(190);
 		}
@@ -1134,7 +1287,10 @@ function App() {
 			const percent = Math.round((step / 30) * 100);
 			setLogs((prev) => [
 				...prev.slice(0, -1),
-				htmlLine(`decrypting grid <span class="bar">[${bar}]</span> ${percent}%`, "pg"),
+				htmlLine(
+					`decrypting grid <span class="bar">[${bar}]</span> ${percent}%`,
+					"pg",
+				),
 			]);
 			await sleep(50);
 		}
@@ -1145,9 +1301,10 @@ function App() {
 		clearLogs();
 		const logo = [LOGO_A, LOGO_B, LOGO_C, LOGO_D, LOGO_E];
 		for (let index = 0; index < logo.length; index += 1) {
-			const accessibleLogo = index === 0
-				? `<span role="img" aria-label="NexusGit">${esc(logo[index])}</span>`
-				: `<span aria-hidden="true">${esc(logo[index])}</span>`;
+			const accessibleLogo =
+				index === 0
+					? `<span role="img" aria-label="NexusGit">${esc(logo[index])}</span>`
+					: `<span aria-hidden="true">${esc(logo[index])}</span>`;
 			appendLine(htmlLine(accessibleLogo, "logo"));
 			await sleep(110);
 		}
@@ -1157,11 +1314,17 @@ function App() {
 		for (let index = 0; index < tagline.length; index += 1) {
 			setLogs((prev) => [
 				...prev.slice(0, -1),
-				htmlLine(esc(tagline.slice(0, index + 1)), "sub cur"),
+				htmlLine(
+					esc(tagline.slice(0, index + 1)),
+					"sub cur",
+				),
 			]);
 			await sleep(24);
 		}
-		setLogs((prev) => [...prev.slice(0, -1), htmlLine(esc(tagline), "sub")]);
+		setLogs((prev) => [
+			...prev.slice(0, -1),
+			htmlLine(esc(tagline), "sub"),
+		]);
 		await sleep(500);
 		appendLine(htmlLine("", "pg"));
 		appendLine(htmlLine("Arch Linux 6.17.2-arch1-1 (tty1)", "dim"));
@@ -1170,17 +1333,31 @@ function App() {
 		for (const char of "guest") {
 			setLogs((prev) => {
 				const last = prev[prev.length - 1];
-				return [...prev.slice(0, -1), htmlLine(`${last.html}${char}`, "cur")];
+				return [
+					...prev.slice(0, -1),
+					htmlLine(`${last.html}${char}`, "cur"),
+				];
 			});
 			await sleep(120);
 		}
-		setLogs((prev) => [...prev.slice(0, -1), htmlLine(`${HOST} login: guest`, "pg")]);
+		setLogs((prev) => [
+			...prev.slice(0, -1),
+			htmlLine(`${HOST} login: guest`, "pg"),
+		]);
 		await sleep(250);
 		appendLine(htmlLine("Password:", "cur"));
 		await sleep(700);
-		setLogs((prev) => [...prev.slice(0, -1), htmlLine("Password:", "pg")]);
+		setLogs((prev) => [
+			...prev.slice(0, -1),
+			htmlLine("Password:", "pg"),
+		]);
 		await sleep(200);
-		appendLine(htmlLine(`Last login: ${esc(new Date(Date.now() - 86400000).toString().slice(0, 24))} on tty1`, "dim"));
+		appendLine(
+			htmlLine(
+				`Last login: ${esc(new Date(Date.now() - 86400000).toString().slice(0, 24))} on tty1`,
+				"dim",
+			),
+		);
 	};
 
 	const landing = async (quickMode) => {
@@ -1191,7 +1368,12 @@ function App() {
 		setInput("");
 
 		if (quickMode) {
-			appendLine(htmlLine("Session restored. Listing projects...", "dim"));
+			appendLine(
+				htmlLine(
+					"Session restored. Listing projects...",
+					"dim",
+				),
+			);
 			await runCommand("ls projects");
 			return;
 		}
@@ -1215,7 +1397,10 @@ function App() {
 		let bootSeen = false;
 		if (!forceFull) {
 			try {
-				bootSeen = window.sessionStorage.getItem("ng_boot_seen") === "1";
+				bootSeen =
+					window.sessionStorage.getItem(
+						"ng_boot_seen",
+					) === "1";
 			} catch {
 				bootSeen = false;
 			}
@@ -1326,7 +1511,17 @@ function App() {
 					))}
 				</div>
 				<div className="row" hidden={phase !== "live"}>
-					<span className="ps1"><span className="br">[</span><span className="u">guest@{HOST}</span>{" "}<span className="p">{promptPath}</span><span className="br">]</span><span className="d">$</span></span>
+					<span className="ps1">
+						<span className="br">[</span>
+						<span className="u">
+							guest@{HOST}
+						</span>{" "}
+						<span className="p">
+							{promptPath}
+						</span>
+						<span className="br">]</span>
+						<span className="d">$</span>
+					</span>
 					<input
 						ref={inputRef}
 						value={input}
