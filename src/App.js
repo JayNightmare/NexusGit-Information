@@ -1213,7 +1213,6 @@ function App() {
 	const bootSeq = async () => {
 		setPhase("boot");
 		setSkipVisible(true);
-		clearLogs();
 		appendLine(
 			htmlLine(
 				"Arch Linux 6.17.2-arch1-1 (nexusgit) booting...",
@@ -1298,7 +1297,6 @@ function App() {
 	};
 
 	const introSeq = async () => {
-		clearLogs();
 		const logo = [LOGO_A, LOGO_B, LOGO_C, LOGO_D, LOGO_E];
 		for (let index = 0; index < logo.length; index += 1) {
 			const accessibleLogo =
@@ -1363,7 +1361,6 @@ function App() {
 	const landing = async (quickMode) => {
 		setPhase("live");
 		setSkipVisible(false);
-		clearLogs();
 		setCwd([]);
 		setInput("");
 
