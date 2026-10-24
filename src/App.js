@@ -1374,7 +1374,7 @@ function App() {
 					"dim",
 				),
 			);
-			await runCommand("ls projects");
+			await runCommand("reboot");
 			return;
 		}
 
